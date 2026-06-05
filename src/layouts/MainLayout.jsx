@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import "../styles/app.css";
 
-export default function MainLayout() {
+function MainLayout() {
     return (
         <>
             <div className="app-root">
@@ -14,3 +14,5 @@ export default function MainLayout() {
         </>
     );
 }
+
+export default MainLayout;

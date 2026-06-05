@@ -1,4 +1,4 @@
-export default function ReportPage() {
+function ReportPage() {
     return (
         <>
             <section>
@@ -7,3 +7,5 @@ export default function ReportPage() {
         </>
     );
 }
+
+export default ReportPage;

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/navbar.css";
 
-export default function Navbar() {
+function Navbar() {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
@@ -38,3 +38,5 @@ export default function Navbar() {
         </nav>
     );
 }
+
+export default Navbar;

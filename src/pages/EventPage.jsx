@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/event-page.css";
 
-export default function EventPage() {
+function EventPage() {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -94,3 +94,5 @@ export default function EventPage() {
         </>
     );
 }
+
+export default EventPage;

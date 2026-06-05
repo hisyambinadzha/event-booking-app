@@ -1,6 +1,6 @@
 import BookingForm from "../components/BookingForm";
 
-export default function BookingPage() {
+function BookingPage() {
     return (
         <>
             <div style={{
@@ -16,3 +16,5 @@ export default function BookingPage() {
         </>
     );
 }
+
+export default BookingPage;

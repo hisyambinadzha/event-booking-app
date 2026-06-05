@@ -1,4 +1,4 @@
-export default function NotFoundPage() {
+function NotFoundPage() {
     return (
         <>
             <section>
@@ -7,3 +7,5 @@ export default function NotFoundPage() {
         </>
     )
 }
+
+export default NotFoundPage;

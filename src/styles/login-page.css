@@ -53,3 +53,33 @@
   flex-direction: column;
   gap: 10px;  /* ⬅️ consistent spacing */
 }
+
+.register-text {
+  margin-top: 15px;
+  font-size: 13px;
+  text-align: center;
+  color: #666;
+}
+
+.register-link {
+  color: #007bff;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #fff4f4;
+  color: #d93025;
+  border-left: 4px solid #d93025;
+  border-radius: 6px;
+  font-size: 13px;
+}

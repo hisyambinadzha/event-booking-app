@@ -1,5 +1,6 @@
 import MainLayout from "../layouts/MainLayout";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
 import "../styles/empty-state.css";
 import concertImg from "../assets/concert.jpg";
@@ -16,7 +17,9 @@ import EventCard from "../components/EventCard";
 import { getCategories, getEventsByPage, createEvent } from "../services/event-service";
 
 
-export default function HomePage() {
+function HomePage() {
+  const navigate = useNavigate();
+
   const token = localStorage.getItem("token");
   const userRole = localStorage.getItem("role");
   const adminOnly = userRole === "ADMIN";
@@ -127,7 +130,7 @@ export default function HomePage() {
 
         {/* ✅ Only show if admin */}
         {token && adminOnly && (
-          <button className="create-event-btn">+ Create Event</button>
+          <button className="create-event-btn" onClick={() => navigate("/event/create")}>+ Create Event</button>
         )}
       </div>
 
@@ -172,3 +175,5 @@ export default function HomePage() {
     </>
   );
 }
+
+export default HomePage;

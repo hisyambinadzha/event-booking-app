@@ -1,6 +1,6 @@
 import "../styles/dashboard.css";
 
-export default function DashboardPage() {
+function DashboardPage() {
     // Example mock data — replace with API call later
     const bookings = [
         {
@@ -98,3 +98,4 @@ export default function DashboardPage() {
     );
 }
 
+export default DashboardPage;

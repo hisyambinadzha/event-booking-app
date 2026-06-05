@@ -4,7 +4,7 @@ import "../styles/booking-form.css";
 
 import { createBooking } from "../services/booking-service";
 
-export default function BookingForm() {
+function BookingForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const event = location.state;
@@ -112,3 +112,5 @@ export default function BookingForm() {
     </div>
   );
 }
+
+export default BookingForm;
