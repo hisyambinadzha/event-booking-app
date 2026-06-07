@@ -3,12 +3,29 @@ import API_BASE_URL from "../config";
 
 const BOOKING_API_URL = `${API_BASE_URL}/api/bookings`;
 
-function getHeaders() {
-    const token = localStorage.getItem('token');
-    return token ? {
-        'Authorization': `Bearer ${token}`,
-        "Content-Type": "application/json",
-    } : {};
+function getHeaders({ isJson = true } = {}) {
+    const token = localStorage.getItem("token");
+
+    const headers = {};
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    // Only set Content-Type for JSON requests
+    if (isJson) {
+        headers["Content-Type"] = "application/json";
+    }
+
+    return headers;
+}
+
+export async function getBookings(id) {
+    const response = await fetch(`${BOOKING_API_URL}/user/${id}`, {
+        method: "GET",
+        headers: getHeaders(),
+    });
+    if (!response.ok) throw new Error("Failed to fetch bookings");
+    return response.json();
 }
 
 export async function createBooking(booking) {
@@ -26,19 +43,25 @@ export async function createBooking(booking) {
         console.log("Response status:", response.status);
         console.log("Response ok:", response.ok);
 
-        // Try to parse the response body
-        const responseText = await response.text();
-        console.log("Response body:", responseText);
+        const body = await response.json(); // read once
 
-        if (!response.ok) {
-            throw new Error(`Error creating event: ${response.status} - ${responseText}`);
-        }
-
-        return JSON.parse(responseText);
+        if (!response.ok) throw new Error(`${response.status} - ${body.response.body.responseInfo.message}`);
+        return body;
     } catch (err) {
         console.error("Request failed:", err);
         throw err;
     }
+}
+
+export async function updateBookingStatus(id) {
+    const response = await fetch(`${BOOKING_API_URL}/${id}`, {
+        method: "PUT",
+        headers: getHeaders()
+    });
+    const body = await response.json(); // read once
+
+    if (!response.ok) throw new Error(`${response.status} - ${body.response.body.responseInfo.message}`);
+    return body;
 }
 
 export async function getReports() {

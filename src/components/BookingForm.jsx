@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/booking-form.css";
+import API_BASE_URL from "../config";
 
 import { createBooking } from "../services/booking-service";
 
@@ -66,7 +67,7 @@ function BookingForm() {
   return (
     <div className="booking-container">
       <div className="booking-card">
-        <img src={event.image} alt={event.title} className="booking-image" />
+        <img src={`${API_BASE_URL}${event.image}`} alt={event.title} className="booking-image" />
 
         <h2 className="booking-title">{event.title}</h2>
         <p className="booking-meta">{event.venue} • {formattedDate}</p>
@@ -81,7 +82,6 @@ function BookingForm() {
 
         <form onSubmit={handleSubmit} className="booking-form">
           <div className="form-group">
-            <label>Number of Seats</label>
             <input
               type="number"
               name="numberOfSeats"
@@ -91,6 +91,7 @@ function BookingForm() {
               onChange={handleChange}
               required
             />
+            <label>Number of Seats</label>
           </div>
 
           <div className="total">Total: RM{total}</div>

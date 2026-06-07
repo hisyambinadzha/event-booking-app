@@ -1,50 +1,74 @@
+import { useEffect, useState } from "react";
+import { getBookings, updateBookingStatus } from "../services/booking-service";
+import { getCurrentUser } from "../services/user-service";
 import "../styles/dashboard.css";
 
 function DashboardPage() {
-    // Example mock data — replace with API call later
-    const bookings = [
-        {
-            _id: "6a211547de73735afe513f80",
-            userId: "69ec7d9ba595ae83adb00859",
-            eventId: "6a1538a2ad1c00e8afc17a61",
-            numberOfSeats: 2,
-            bookingDate: "2026-06-03T22:03:51.738Z",
-            totalPrice: 60,
-            bookingStatus: "PENDING"
-        },
-        {
-            _id: "6a211547de73735afe513f81",
-            userId: "69ec7d9ba595ae83adb00859",
-            eventId: "6a1538a2ad1c00e8afc17a62",
-            numberOfSeats: 1,
-            bookingDate: "2026-06-01T18:45:00.000Z",
-            totalPrice: 120,
-            bookingStatus: "APPROVED"
-        },
-        {
-            _id: "6a211547de73735afe513f82",
-            userId: "69ec7d9ba595ae83adb00859",
-            eventId: "6a1538a2ad1c00e8afc17a63",
-            numberOfSeats: 3,
-            bookingDate: "2026-05-25T10:30:00.000Z",
-            totalPrice: 180,
-            bookingStatus: "CANCELLED"
-        },
-        {
-            _id: "6a211547de73735afe513f83",
-            userId: "69ec7d9ba595ae83adb00859",
-            eventId: "6a1538a2ad1c00e8afc17a64",
-            numberOfSeats: 1,
-            bookingDate: "2026-05-20T14:15:00.000Z",
-            totalPrice: 50,
-            bookingStatus: "REJECTED"
-        }
-    ];
+    const [currentUser, setCurrentUser] = useState(null);
+    const [bookings, setBookings] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const handleCancel = (id) => {
-        // TODO: Call your backend API to cancel booking
-        alert(`Booking ${id} cancelled!`);
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            try {
+                setLoading(true);
+                const data = await getCurrentUser();
+
+                console.log("Fetched user:", data.response?.body?.id);
+
+                setCurrentUser(data.response?.body || null);
+            } catch (error) {
+                console.error("Failed to fetch current user:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCurrentUser();
+    }, []);
+
+    useEffect(() => {
+        if (!currentUser?.id) return;
+
+        const fetchBookings = async () => {
+            try {
+                setLoading(true);
+                const data = await getBookings(currentUser.id); // call backend service
+
+                console.log("Fetched bookings:", data.response?.body.data);
+
+                setBookings(data.response?.body.data || []);
+            } catch (error) {
+                console.error("Failed to fetch bookings:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBookings();
+    }, [currentUser]);
+
+    const handleCancel = async (id) => {
+        try {
+            // TODO: Replace with actual API call to cancel booking
+            alert(`Booking ${id} cancelled!`);
+            // Optionally refresh bookings after cancellation
+            const updated = await updateBookingStatus(id);
+
+            // Optionally log the updated booking
+            console.log("Updated booking:", updated);
+
+            // Refetch bookings list after update
+            const refreshed = await getBookings(currentUser.id);
+            setBookings(refreshed.response?.body.data || []);
+        } catch (error) {
+            alert(error.message);
+        }
     };
+
+    if (loading) {
+        return <p>Loading bookings...</p>;
+    }
 
     return (
         <section className="dashboard">
@@ -61,36 +85,54 @@ function DashboardPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {bookings.map((booking) => (
-                            <tr key={booking._id}>
-                                <td>{booking.numberOfSeats}</td>
-                                <td>
-                                    {new Date(booking.bookingDate).toLocaleDateString("en-GB", {
-                                        day: "2-digit",
-                                        month: "short",
-                                        year: "numeric",
-                                        hour: "2-digit",
-                                        minute: "2-digit"
-                                    })}
-                                </td>
-                                <td>{booking.totalPrice === 0 ? "Free" : `RM${booking.totalPrice}`}</td>
-                                <td className={`status ${booking.bookingStatus.toLowerCase()}`}>
-                                    {booking.bookingStatus}
-                                </td>
-                                <td>
-                                    {booking.bookingStatus === "PENDING" ? (
-                                        <button
-                                            className="cancel-btn"
-                                            onClick={() => handleCancel(booking._id)}
-                                        >
-                                            Cancel
-                                        </button>
-                                    ) : (
-                                        <span className="no-action">—</span>
-                                    )}
-                                </td>
+                        {bookings.length === 0 ? (
+                            <tr>
+                                <td colSpan="5">No bookings found.</td>
                             </tr>
-                        ))}
+                        ) : (
+                            bookings
+                                .slice() // copy array to avoid mutating state
+                                .sort((a, b) => new Date(b.bookingDate) - new Date(a.bookingDate)) // DESC
+                                .map((booking) => (
+                                    <tr key={booking.id}>
+                                        <td>{booking.numberOfSeats}</td>
+                                        <td>
+                                            {new Date(
+                                                new Date(booking.bookingDate).getTime() + 8 * 60 * 60 * 1000 // add 8 hours
+                                            ).toLocaleString("en-GB", {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric",
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                                hour12: true,
+                                            })}
+                                        </td>
+                                        <td>
+                                            {booking.totalPrice === 0
+                                                ? "Free"
+                                                : `RM${booking.totalPrice}`}
+                                        </td>
+                                        <td
+                                            className={`status ${booking.bookingStatus.toLowerCase()}`}
+                                        >
+                                            {booking.bookingStatus}
+                                        </td>
+                                        <td>
+                                            {booking.bookingStatus === "PENDING" ? (
+                                                <button
+                                                    className="cancel-btn"
+                                                    onClick={() => handleCancel(booking.id)}
+                                                >
+                                                    Cancel
+                                                </button>
+                                            ) : (
+                                                <span className="no-action">—</span>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))
+                        )}
                     </tbody>
                 </table>
             </div>

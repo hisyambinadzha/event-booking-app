@@ -40,3 +40,19 @@ export async function login(email, password) {
 
   return response.json();
 }
+
+export async function getCurrentUser() {
+  const email = localStorage.getItem("email");
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${AUTH_API_URL}/profile/me?email=${email}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch user");
+  }
+  return response.json();
+}
