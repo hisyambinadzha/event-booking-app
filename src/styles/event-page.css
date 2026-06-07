@@ -58,6 +58,12 @@
   align-items: center;
 }
 
+.header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 /* ✅ INLINE BUTTON */
 .inline-book-btn {
   padding: 8px 14px;
@@ -71,6 +77,34 @@
 
 .inline-book-btn:hover {
   background: #218838;
+}
+
+.inline-edit-btn {
+  padding: 8px 14px;
+  font-size: 14px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.inline-edit-btn:hover {
+  background: #007bff;
+}
+
+/* Delete button */
+.inline-delete-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.inline-delete-btn:hover {
+    background: #b91c1c;
 }
 
 .event-description {

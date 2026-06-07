@@ -1,4 +1,7 @@
-const BOOKING_API_URL = "http://localhost:8080/api/bookings";
+import API_BASE_URL from "../config";
+
+
+const BOOKING_API_URL = `${API_BASE_URL}/api/bookings`;
 
 function getHeaders() {
     const token = localStorage.getItem('token');
@@ -36,4 +39,13 @@ export async function createBooking(booking) {
         console.error("Request failed:", err);
         throw err;
     }
+}
+
+export async function getReports() {
+    const response = await fetch(`${BOOKING_API_URL}/reports`, {
+        method: "GET",
+        headers: getHeaders(),
+    });
+    if (!response.ok) throw new Error("Failed to fetch events");
+    return response.json();
 }

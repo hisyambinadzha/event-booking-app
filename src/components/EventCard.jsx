@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import API_BASE_URL from "../config";
 
 const EventCard = ({ event }) => {
     const navigate = useNavigate();
@@ -10,7 +11,7 @@ const EventCard = ({ event }) => {
     });
     return (
         <div key={event.id} className="event-card">
-            <img src={event.image} alt={event.title} />
+            <img src={`${API_BASE_URL}${event.image}`} alt={event.title} />
 
             <span className={`event-badge ${event.category}`}>
                 {event.category.toUpperCase()}

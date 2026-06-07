@@ -160,12 +160,20 @@ body {
     border: 1px solid #ddd;
 }
 
-/* Button */
-.event-form button {
+/* Action buttons container */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+/* Save button (Danger) */
+.save-btn {
+    flex: 1;
     padding: 12px;
     border: none;
     border-radius: 8px;
-    background: linear-gradient(135deg, #007bff, #0056b3);
+    background: linear-gradient(135deg, #dc2626, #b91c1c); /* red gradient */
     color: white;
     font-size: 15px;
     font-weight: bold;
@@ -173,7 +181,27 @@ body {
     transition: 0.3s;
 }
 
-.event-form button:hover {
+.save-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+}
+
+/* Close button (Blue) */
+.cancel-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #007bff, #0056b3); /* blue gradient */
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cancel-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004080); /* darker blue on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4); /* blue shadow */
 }

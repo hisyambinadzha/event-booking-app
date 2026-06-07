@@ -1,11 +1,21 @@
-const EVENT_API_URL = "http://localhost:8080/api/events";
+import API_BASE_URL from "../config";
 
-function getHeaders() {
-    const token = localStorage.getItem('token');
-    return token ? {
-        'Authorization': `Bearer ${token}`,
-        "Content-Type": "application/json",
-    } : {};
+const EVENT_API_URL = `${API_BASE_URL}/api/events`;
+
+function getHeaders({ isJson = true } = {}) {
+    const token = localStorage.getItem("token");
+
+    const headers = {};
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    // Only set Content-Type for JSON requests
+    if (isJson) {
+        headers["Content-Type"] = "application/json";
+    }
+
+    return headers;
 }
 
 export async function getCategories() {
@@ -36,31 +46,74 @@ export async function getEventsByPage(page, size, sort, category = "all") {
 }
 
 export async function createEvent(event) {
-    console.log("Request URL:", EVENT_API_URL);
-    console.log("Request Headers:", getHeaders());
-    console.log("Request Body:", JSON.stringify(event, null, 2));
+    for (let [key, value] of event.entries()) {
+        console.log(`${key}:`, value);
+    }
 
     try {
         const response = await fetch(EVENT_API_URL, {
             method: "POST",
-            headers: getHeaders(),
-            body: JSON.stringify(event),
+            headers: getHeaders({ isJson: false }),
+            body: event,
         });
 
         console.log("Response status:", response.status);
         console.log("Response ok:", response.ok);
 
-        // Try to parse the response body
-        const responseText = await response.text();
-        console.log("Response body:", responseText);
+        const body = await response.json(); // read once
 
         if (!response.ok) {
-            throw new Error(`Error creating event: ${response.status} - ${responseText}`);
+            // Then throw with the parsed content
+            throw new Error(`${response.status} - ${body.response.body.responseInfo.message}`);
         }
 
-        return JSON.parse(responseText);
+        return body;
     } catch (err) {
         console.error("Request failed:", err);
         throw err;
     }
+}
+
+export async function updateEvent(id, event) {
+    console.log("Request URL:", `${EVENT_API_URL}/${id}`);
+    console.log("Request Headers:", getHeaders({ isJson: false }));
+    for (let [key, value] of event.entries()) {
+        console.log(`${key}:`, value);
+    }
+
+    try {
+        const response = await fetch(`${EVENT_API_URL}/${id}`, {
+            method: "PUT",
+            headers: getHeaders({ isJson: false }),
+            body: event,
+        });
+
+        console.log("Response status:", response.status);
+        console.log("Response ok:", response.ok);
+
+        const body = await response.json(); // read once
+
+        if (!response.ok) {
+            // Then throw with the parsed content
+            throw new Error(`${response.status} - ${body.response.body.responseInfo.message}`);
+        }
+
+        return body;
+    } catch (err) {
+        console.error("Request failed:", err);
+        throw err;
+    }
+}
+
+export async function deleteEvent(id) {
+    const response = await fetch(`${EVENT_API_URL}/${id}`, {
+        method: "DELETE",
+        headers: getHeaders(),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete event");
+    }
+
+    return response.json();
 }

@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EventForm from "../components/EventForm";
 import {createEvent} from "../services/event-service";
 
 function CreateEventPage() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -23,9 +25,14 @@ function CreateEventPage() {
     });
   };
 
-  const handleFileChange = (file) => {
-    setImageFile(file);
-  };
+const handleFileChange = (file) => {
+  if (file.size > 10 * 1024 * 1024) { // 10MB
+    alert("File too large. Please upload an image under 10MB.");
+    return;
+  }
+  setImageFile(file);
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,24 +50,20 @@ function CreateEventPage() {
         formData.append("image", imageFile);
       }
 
-      const data = await createEvent(newEvent)
-      // const response = await axios.post(
-      //   "/api/admin/events",
-      //   formData,
-      //   {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //       Authorization: "Bearer YOUR_ADMIN_TOKEN"
-      //     }
-      //   }
-      // );
+      if (new Date(formData.eventDate) < new Date()) {
+        alert("Event date must be in the future");
+        return;
+      }
+
+      const data = await createEvent(formData);
+
+      console.log(data);
 
       alert("Event created successfully!");
-      // console.log(response.data);
+      navigate("/");
 
     } catch (error) {
-      console.error(error);
-      alert("Error creating event");
+      alert(error.message);
     }
   };
 

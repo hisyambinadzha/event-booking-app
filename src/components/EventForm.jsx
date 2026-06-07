@@ -1,8 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/event-form.css";
+import API_BASE_URL from "../config";
 
 function EventForm({ title, form, onChange, onSubmit, onFileChange }) {
   const [preview, setPreview] = useState(null);
+  const navigate = useNavigate();
+
+  // Initialize preview with existing image
+  useEffect(() => {
+    if (form.image) {
+      setPreview(`${API_BASE_URL}${form.image}`);
+    }
+  }, [form.image]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -14,7 +24,7 @@ function EventForm({ title, form, onChange, onSubmit, onFileChange }) {
   };
 
   return (
-    <form className="event-form" onSubmit={onSubmit}>
+    <form className="event-form" onSubmit={onSubmit} encType="multipart/form-data">
       <h2>{title}</h2>
 
       <div className="form-group">
@@ -93,6 +103,7 @@ function EventForm({ title, form, onChange, onSubmit, onFileChange }) {
             Choose File
             <input
               type="file"
+              name="image"
               accept="image/*"
               onChange={handleImageChange}
               hidden
@@ -109,9 +120,20 @@ function EventForm({ title, form, onChange, onSubmit, onFileChange }) {
             <img src={preview} alt="preview" />
           </div>
         )}
+
       </div>
 
-      <button type="submit">Save</button>
+      <div className="form-actions">
+        <button type="submit" className="save-btn">Save</button>
+        <button
+          type="button"
+          className="cancel-btn"
+          onClick={() => navigate(-1)} // or navigate("/home")
+        >
+          Close
+        </button>
+      </div>
+
     </form>
   );
 }

@@ -10,6 +10,7 @@ import DashboardPage from "./pages/DashboardPage";
 import EventPage from "./pages/EventPage";
 import BookingPage from "./pages/BookingPage";
 import CreateEventPage from "./pages/CreateEventPage";
+import EditEventPage from "./pages/EditEventPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
@@ -39,6 +40,7 @@ function App() {
           <Route path="/event/:id" element={<EventPage />} />
           <Route path="/booking/:id" element={<BookingPage />} />
           <Route path="/event/create" element={<CreateEventPage/>} />
+          <Route path="/event/edit/:id" element={<EditEventPage/>} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
