@@ -4,7 +4,7 @@ import { login } from "../services/user-service";
 import AuthForm from "../components/AuthForm";
 
 function LoginPage() {
-  const [email, setEmail] = useState("abu.garcia@gmail.com");
+  const [email, setEmail] = useState("admin@gmail.com");
   const [password, setPassword] = useState("password");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -23,7 +23,7 @@ function LoginPage() {
       localStorage.setItem("email", data.response.body.email);
       localStorage.setItem("role", data.response.body.role);
 
-      navigate(data.response.body.role === "ADMIN" ? "/reports" : "/dashboard");
+      navigate(data.response.body.role === "ADMIN" ? "/admin-dashboard" : "/my-bookings");
 
     } catch (err) {
       setError("Login failed. Please check your email and password.");

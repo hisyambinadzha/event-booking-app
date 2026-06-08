@@ -88,7 +88,7 @@ function EventForm({ title, form, onChange, onSubmit, onFileChange }) {
 
         <div className="form-group">
           <select name="status" value={form.status} onChange={onChange}>
-            <option value="ACTIVE">ACTIVE</option>
+            <option value="OPEN">OPEN</option>
             <option value="CANCELLED">CANCELLED</option>
             <option value="DRAFT">DRAFT</option>
           </select>

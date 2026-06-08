@@ -45,7 +45,6 @@ function BookingForm() {
     const bookingRequest = {
       numberOfSeats: parseInt(form.numberOfSeats, 10),
       eventId: event.id, // adjust if your backend uses _id
-      bookingDate: new Date().toISOString(), // send current time
     };
 
     try {
@@ -58,7 +57,7 @@ function BookingForm() {
       );
 
       // ✅ Navigate after alert is closed
-      navigate("/dashboard");
+      navigate("/my-bookings");
     } catch (err) {
       alert(err.message);
     }

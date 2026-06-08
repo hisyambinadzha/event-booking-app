@@ -48,7 +48,22 @@ export async function getCurrentUser() {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch user");
+  }
+  return response.json();
+}
+
+export async function getUserById(id) {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${AUTH_API_URL}/profile/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
     },
   });
   if (!response.ok) {

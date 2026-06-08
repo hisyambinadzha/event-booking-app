@@ -5,8 +5,9 @@ import MainLayout from "./layouts/MainLayout";
 import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
-import ReportPage from "./pages/ReportPage";
+import AdminBookingPage from "./pages/AdminBookingPage";
 import DashboardPage from "./pages/DashboardPage";
+import MyBookingPage from "./pages/MyBookingPage";
 import EventPage from "./pages/EventPage";
 import BookingPage from "./pages/BookingPage";
 import CreateEventPage from "./pages/CreateEventPage";
@@ -23,17 +24,24 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route 
-            path="/reports"
+            path="/admin-bookings"
             element={
               <ProtectedRoute adminOnly={true}>
-                <ReportPage />
+                <AdminBookingPage />
+              </ProtectedRoute>}
+          />
+          <Route 
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <DashboardPage />
               </ProtectedRoute>}
           />
           <Route
-            path="/dashboard"
+            path="/my-bookings"
             element={
               <ProtectedRoute adminOnly={false}>
-                <DashboardPage />
+                <MyBookingPage />
               </ProtectedRoute>
             }
           />

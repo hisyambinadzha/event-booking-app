@@ -9,9 +9,9 @@ function ProtectedRoute({ children, adminOnly }) {
         return <Navigate to="/login" replace />;
     }
 
-    // Admin-only route but user is not admin → go to dashboard
+    // Admin-only route but user is not admin → go to my bookings page
     if (adminOnly && role !== "ADMIN") {
-        return <Navigate to="/dashboard" replace />;
+        return <Navigate to="/my-bookings" replace />;
     }
 
     // Otherwise allow access

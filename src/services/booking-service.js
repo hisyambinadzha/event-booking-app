@@ -19,6 +19,15 @@ function getHeaders({ isJson = true } = {}) {
     return headers;
 }
 
+export async function adminGetBookings() {
+    const response = await fetch(`${BOOKING_API_URL}/admin`, {
+        method: "GET",
+        headers: getHeaders(),
+    });
+    if (!response.ok) throw new Error("Failed to fetch bookings");
+    return response.json();
+}
+
 export async function getBookings(id) {
     const response = await fetch(`${BOOKING_API_URL}/user/${id}`, {
         method: "GET",

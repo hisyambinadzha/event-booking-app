@@ -19,13 +19,15 @@ function Navbar() {
                 {token && role === "ADMIN" && (
                     <>
                         <span className="nav-link-separator"> | </span>
-                        <Link to="/reports">Reports</Link>
+                        <Link to="/admin-bookings">Bookings</Link>
+                        <span className="nav-link-separator"> | </span>
+                        <Link to="/admin-dashboard">Dashboard</Link>
                     </>
                 )}
                 {token && role !== "ADMIN" && (
                     <>
                         <span className="nav-link-separator"> | </span>
-                        <Link to="/dashboard">My Bookings</Link>
+                        <Link to="/my-bookings">My Bookings</Link>
                     </>
                 )}
                 <span className="nav-link-separator"> | </span>

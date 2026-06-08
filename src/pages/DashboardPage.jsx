@@ -1,142 +1,97 @@
 import { useEffect, useState } from "react";
-import { getBookings, updateBookingStatus } from "../services/booking-service";
-import { getCurrentUser } from "../services/user-service";
-import "../styles/dashboard.css";
+import API_BASE_URL from "../config";
+import "../styles/report-page.css";
+import { getReports } from "../services/booking-service";
 
 function DashboardPage() {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [bookings, setBookings] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [reports, setReports] = useState({
+        totalBookings: [],
+        popularEvents: [],
+        revenue: [],
+        monthlyTotals: [],
+        seatsByCategory: []
+    });
 
     useEffect(() => {
-        const fetchCurrentUser = async () => {
-            try {
-                setLoading(true);
-                const data = await getCurrentUser();
+        async function fetchReports() {
+            const data = await getReports();
 
-                console.log("Fetched user:", data.response?.body?.id);
+            console.log(data.response.body);
 
-                setCurrentUser(data.response?.body || null);
-            } catch (error) {
-                console.error("Failed to fetch current user:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchCurrentUser();
+            setReports(data.response?.body || {}); // because you wrap with ApiResponseBuilder
+        }
+        fetchReports();
     }, []);
 
-    useEffect(() => {
-        if (!currentUser?.id) return;
 
-        const fetchBookings = async () => {
-            try {
-                setLoading(true);
-                const data = await getBookings(currentUser.id); // call backend service
-
-                console.log("Fetched bookings:", data.response?.body.data);
-
-                setBookings(data.response?.body.data || []);
-            } catch (error) {
-                console.error("Failed to fetch bookings:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchBookings();
-    }, [currentUser]);
-
-    const handleCancel = async (id) => {
-        try {
-            // TODO: Replace with actual API call to cancel booking
-            alert(`Booking ${id} cancelled!`);
-            // Optionally refresh bookings after cancellation
-            const updated = await updateBookingStatus(id);
-
-            // Optionally log the updated booking
-            console.log("Updated booking:", updated);
-
-            // Refetch bookings list after update
-            const refreshed = await getBookings(currentUser.id);
-            setBookings(refreshed.response?.body.data || []);
-        } catch (error) {
-            alert(error.message);
-        }
-    };
-
-    if (loading) {
-        return <p>Loading bookings...</p>;
-    }
+    // ✅ Compute total revenue from per-event revenue
+    const totalRevenue = reports.revenue?.reduce(
+        (sum, r) => sum + (r.revenue || 0),
+        0
+    ) || 0;
 
     return (
-        <section className="dashboard">
-            <div className="booking-history">
-                <h2>Booking History</h2>
-                <table className="booking-table">
-                    <thead>
-                        <tr>
-                            <th>Seats</th>
-                            <th>Date</th>
-                            <th>Total Price</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {bookings.length === 0 ? (
-                            <tr>
-                                <td colSpan="5">No bookings found.</td>
-                            </tr>
-                        ) : (
-                            bookings
-                                .slice() // copy array to avoid mutating state
-                                .sort((a, b) => new Date(b.bookingDate) - new Date(a.bookingDate)) // DESC
-                                .map((booking) => (
-                                    <tr key={booking.id}>
-                                        <td>{booking.numberOfSeats}</td>
-                                        <td>
-                                            {new Date(
-                                                new Date(booking.bookingDate).getTime() + 8 * 60 * 60 * 1000 // add 8 hours
-                                            ).toLocaleString("en-GB", {
-                                                day: "2-digit",
-                                                month: "short",
-                                                year: "numeric",
-                                                hour: "2-digit",
-                                                minute: "2-digit",
-                                                hour12: true,
-                                            })}
-                                        </td>
-                                        <td>
-                                            {booking.totalPrice === 0
-                                                ? "Free"
-                                                : `RM${booking.totalPrice}`}
-                                        </td>
-                                        <td
-                                            className={`status ${booking.bookingStatus.toLowerCase()}`}
-                                        >
-                                            {booking.bookingStatus}
-                                        </td>
-                                        <td>
-                                            {booking.bookingStatus === "PENDING" ? (
-                                                <button
-                                                    className="cancel-btn"
-                                                    onClick={() => handleCancel(booking.id)}
-                                                >
-                                                    Cancel
-                                                </button>
-                                            ) : (
-                                                <span className="no-action">—</span>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        <div className="report-page">
+            <h1>Dashboard</h1>
+
+            {/* Total Bookings */}
+            <section className="report-section">
+                <h2>Total Bookings per Event</h2>
+                <div className="report-grid">
+                    {reports.totalBookings?.map(r => (
+                        <div className="report-card" key={r._id}>
+                            <h3>{r._id}</h3>
+                            <div className="value category-popular">{r.totalBookings}</div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Revenue per Event */}
+            <section className="report-section">
+                <h2>Revenue per Event</h2>
+                <div className="report-grid">
+                    {reports.revenue?.map(r => (
+                        <div className="report-card" key={r._id}>
+                            <h3>{r._id}</h3>
+                            <div className="value category-revenue">RM {r.revenue}</div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* ✅ Total Revenue */}
+            <section className="report-section">
+                <h2>Total Revenue</h2>
+                <div className="report-card">
+                    <div className="value category-revenue">RM {totalRevenue}</div>
+                </div>
+            </section>
+
+            {/* Seats Sold by Category */}
+            <section className="report-section">
+                <h2>Seats Sold by Category</h2>
+                <ul className="report-list">
+                    {reports.seatsByCategory?.map(r => (
+                        <li key={r._id}>
+                            <span className="category-sales">{r._id}</span>: {r.seatsSold} seats
+                        </li>
+                    ))}
+                </ul>
+            </section>
+
+            {/* Monthly Totals */}
+            <section className="report-section">
+                <h2>Monthly Bookings</h2>
+                <ul className="report-list">
+                    {reports.monthlyTotals?.map(r => (
+                        <li key={`${r._id.year}-${r._id.month}`}>
+                            {r._id.month}/{r._id.year}: {r.totalBookings} bookings
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        </div>
     );
 }
 

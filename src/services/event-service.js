@@ -26,6 +26,14 @@ export async function getCategories() {
     return response.json();
 }
 
+export async function getEventById(id) {
+    const response = await fetch(`${EVENT_API_URL}/${id}`, {
+        method: "GET",
+    });
+    if (!response.ok) throw new Error(`Failed to fetch event ${id}`);
+    return response.json();
+}
+
 export async function getEventsByPage(page, size, sort, category = "all") {
     const params = new URLSearchParams({
         page,

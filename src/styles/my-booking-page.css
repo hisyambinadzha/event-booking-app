@@ -18,22 +18,18 @@
 /* ✅ Status colors */
 .status.pending {
   color: #ffbf00; /* dark amber / dark yellow */
-  font-weight: 600;
 }
 
 .status.approved {
   color: #166534; /* green */
-  font-weight: 600;
 }
 
 .status.cancelled {
   color: #dc2626; /* red */
-  font-weight: 600;
 }
 
 .status.rejected {
   color: #6b7280; /* gray */
-  font-weight: 600;
 }
 
 /* ✅ Cancel button styled as danger */
