@@ -59,3 +59,13 @@ button.danger:hover {
   justify-content: center;
   height: 100vh;
 }
+
+.error {
+  margin-top: 10px;
+  padding: 8px;
+  background: #ffe6e6;
+  color: #d93025;
+  border-radius: 6px;
+  font-size: 12px;
+  text-align: center;
+}

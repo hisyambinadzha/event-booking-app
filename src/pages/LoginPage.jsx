@@ -23,8 +23,11 @@ function LoginPage() {
       localStorage.setItem("email", data.response.body.email);
       localStorage.setItem("role", data.response.body.role);
 
-      navigate(data.response.body.role === "ADMIN" ? "/admin-dashboard" : "/my-bookings");
-
+      navigate(
+        data.response.body.role === "ADMIN"
+          ? "/admin-dashboard"
+          : "/my-bookings",
+      );
     } catch (err) {
       setError("Login failed. Please check your email and password.");
     } finally {
@@ -47,9 +50,7 @@ function LoginPage() {
 
       <p className="auth-switch">
         Join us Now!{" "}
-        <span onClick={() => navigate("/register")}>
-          Create account
-        </span>
+        <span onClick={() => navigate("/register")}>Create account</span>
       </p>
     </div>
   );

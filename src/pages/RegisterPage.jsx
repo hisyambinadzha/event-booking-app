@@ -30,7 +30,6 @@ function RegisterPage() {
 
       alert("Registration successful!");
       navigate("/login");
-
     } catch (err) {
       setError("Registration failed. Try again.");
     } finally {
@@ -49,9 +48,7 @@ function RegisterPage() {
         onFullNameChange={(e) => setFullName(e.target.value)}
         onEmailChange={(e) => setEmail(e.target.value)}
         onPasswordChange={(e) => setPassword(e.target.value)}
-        onConfirmPasswordChange={(e) =>
-          setConfirmPassword(e.target.value)
-        }
+        onConfirmPasswordChange={(e) => setConfirmPassword(e.target.value)}
         onSubmit={handleRegister}
         loading={loading}
         error={error}
@@ -59,9 +56,7 @@ function RegisterPage() {
 
       <p className="auth-switch">
         Already have an account?{" "}
-        <span onClick={() => navigate("/login")}>
-          Login
-        </span>
+        <span onClick={() => navigate("/login")}>Login</span>
       </p>
     </div>
   );

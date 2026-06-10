@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { adminGetBookings, updateBookingStatus } from "../services/booking-service";
+import {
+  adminGetBookings,
+  updateBookingStatus,
+} from "../services/booking-service";
 import { getEventById } from "../services/event-service";
 import { getUserById } from "../services/user-service";
 import { enrichAndSortBookings } from "../components/Helper";
@@ -42,9 +45,20 @@ const AdminBookingPage = () => {
     }
   };
 
-
   if (loading) return <p>Loading bookings...</p>;
-  if (error) return <p>{error}</p>;
+  if (error) {
+    return (
+      <div className="error-message">
+        {error || "We couldn’t load the bookings. Please try again."}
+        <button
+          className="error-retry-btn"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-bookings">
@@ -76,14 +90,18 @@ const AdminBookingPage = () => {
                 {booking.bookingStatus === "PENDING" ? (
                   <button
                     className="approve-btn"
-                    onClick={() => handleUpdateBookingStatus(booking.id, "APPROVED")}
+                    onClick={() =>
+                      handleUpdateBookingStatus(booking.id, "APPROVED")
+                    }
                   >
                     Approve
                   </button>
                 ) : booking.bookingStatus === "APPROVED" ? (
                   <button
                     className="reject-btn"
-                    onClick={() => handleUpdateBookingStatus(booking.id, "REJECTED")}
+                    onClick={() =>
+                      handleUpdateBookingStatus(booking.id, "REJECTED")
+                    }
                   >
                     Reject
                   </button>

@@ -16,7 +16,7 @@ function EditEventPage() {
     price: event.price,
     capacity: event.capacity,
     status: event.status,
-    image: event.image
+    image: event.image,
   });
 
   const [imageFile, setImageFile] = useState(null);
@@ -24,7 +24,7 @@ function EditEventPage() {
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -40,7 +40,8 @@ function EditEventPage() {
 
       // Append non-file fields
       Object.keys(form).forEach((key) => {
-        if (key !== "image") { // skip image string
+        if (key !== "image") {
+          // skip image string
           formData.append(key, form[key]);
         }
       });
@@ -58,7 +59,6 @@ function EditEventPage() {
       alert("Error updating event");
     }
   };
-
 
   return (
     <div>

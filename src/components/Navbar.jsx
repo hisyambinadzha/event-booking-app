@@ -19,7 +19,7 @@ function Navbar() {
                 {token && role === "ADMIN" && (
                     <>
                         <span className="nav-link-separator"> | </span>
-                        <Link to="/admin-bookings">Bookings</Link>
+                        <Link to="/admin-bookings">User Bookings</Link>
                         <span className="nav-link-separator"> | </span>
                         <Link to="/admin-dashboard">Dashboard</Link>
                     </>

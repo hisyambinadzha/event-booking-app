@@ -1,7 +1,7 @@
 import MainLayout from "../layouts/MainLayout";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/home.css";
+import "../styles/home-page.css";
 import "../styles/empty-state.css";
 import concertImg from "../assets/concert.jpg";
 import autoImg from "../assets/auto.jpg";
@@ -14,8 +14,11 @@ import wellnessImg from "../assets/wellness.jpg";
 import sportsImg from "../assets/sport.jpg";
 
 import EventCard from "../components/EventCard";
-import { getCategories, getEventsByPage, createEvent } from "../services/event-service";
-
+import {
+  getCategories,
+  getEventsByPage,
+  createEvent,
+} from "../services/event-service";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -62,7 +65,12 @@ function HomePage() {
       if (ignore) return;
 
       try {
-        const data = await getEventsByPage(currentPage, pageSize, "eventDate,desc", category);
+        const data = await getEventsByPage(
+          currentPage,
+          pageSize,
+          "eventDate,desc",
+          category,
+        );
         console.log("API response:", data);
 
         // Adjust path depending on your apiResponseBuilder structure
@@ -73,12 +81,16 @@ function HomePage() {
       }
     }
     fetchEvents();
-    return () => { ignore = true; };
+    return () => {
+      ignore = true;
+    };
   }, [currentPage, pageSize, category]);
 
   // ✅ FILTER + SEARCH
   const filteredEvents = events.filter((event) => {
-    const matchSearch = event.title.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = event.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
     const matchCategory = category === "all" || event.category === category;
     return matchSearch && matchCategory;
   });
@@ -127,51 +139,50 @@ function HomePage() {
           <option value={20}>20 per page</option>
         </select>
 
-
         {/* ✅ Only show if admin */}
         {token && adminOnly && (
-          <button className="create-event-btn" onClick={() => navigate("/event/create")}>+ Create Event</button>
+          <button
+            className="create-event-btn"
+            onClick={() => navigate("/event/create")}
+          >
+            + Create Event
+          </button>
         )}
       </div>
 
-      {
-        filteredEvents.length === 0 ? (
-          <div className="empty-events">
-            <div className="empty-card">
-              <span className="empty-icon">🎉</span>
-              <h2>No Events Found</h2>
-              <p>Looks like there are no events available at the moment.</p>
-            </div>
+      {filteredEvents.length === 0 ? (
+        <div className="empty-card">
+          <span className="empty-icon">🎉</span>
+          <h2>No Events Found</h2>
+          <p>Looks like there are no events available at the moment.</p>
+        </div>
+      ) : (
+        <>
+          {/* ✅ EVENT LIST */}
+          <div className="event-list">
+            {filteredEvents.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
           </div>
-        ) : (
-          <>
-            {/* ✅ EVENT LIST */}
-            <div className="event-list">
-              {filteredEvents.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-            </div>
-          </>
-        )
-      }
+        </>
+      )}
 
-      {
-        filteredEvents.length !== 0 && (
-          <>
-            {/* ✅ PAGINATION */}
-            <div className="pagination">
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i}
-                  className={currentPage === i ? "active" : ""}
-                  onClick={() => setCurrentPage(i)}
-                >
-                  {i}
-                </button>
-              ))}
-            </div>
-          </>
-        )}
+      {filteredEvents.length !== 0 && (
+        <>
+          {/* ✅ PAGINATION */}
+          <div className="pagination">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                className={currentPage === i ? "active" : ""}
+                onClick={() => setCurrentPage(i)}
+              >
+                {i}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 }

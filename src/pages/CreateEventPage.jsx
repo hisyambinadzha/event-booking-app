@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EventForm from "../components/EventForm";
-import {createEvent} from "../services/event-service";
+import { createEvent } from "../services/event-service";
 
 function CreateEventPage() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ function CreateEventPage() {
     eventDate: "",
     price: 0,
     capacity: 0,
-    status: "DRAFT"
+    status: "DRAFT",
   });
 
   const [imageFile, setImageFile] = useState(null);
@@ -21,18 +21,18 @@ function CreateEventPage() {
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-const handleFileChange = (file) => {
-  if (file.size > 10 * 1024 * 1024) { // 10MB
-    alert("File too large. Please upload an image under 10MB.");
-    return;
-  }
-  setImageFile(file);
-};
-
+  const handleFileChange = (file) => {
+    if (file.size > 10 * 1024 * 1024) {
+      // 10MB
+      alert("File too large. Please upload an image under 10MB.");
+      return;
+    }
+    setImageFile(file);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,7 +61,6 @@ const handleFileChange = (file) => {
 
       alert("Event created successfully!");
       navigate("/");
-
     } catch (error) {
       alert(error.message);
     }

@@ -15,11 +15,13 @@ export const register = async (fullName, email, password) => {
     }),
   });
 
-  if (!response.ok) {
-    throw new Error("Invalid email or password");
-  }
+  const body = await response.json(); // read once
 
-  return response.json();
+  if (!response.ok)
+    throw new Error(
+      `${response.status} - ${body.response.body.responseInfo.message}`,
+    );
+  return body;
 };
 
 export async function login(email, password) {
@@ -34,11 +36,13 @@ export async function login(email, password) {
     }),
   });
 
-  if (!response.ok) {
-    throw new Error("Invalid email or password");
-  }
+  const body = await response.json(); // read once
 
-  return response.json();
+  if (!response.ok)
+    throw new Error(
+      `${response.status} - ${body.response.body.responseInfo.message}`,
+    );
+  return body;
 }
 
 export async function getCurrentUser() {
@@ -48,7 +52,7 @@ export async function getCurrentUser() {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   });
   if (!response.ok) {
@@ -63,11 +67,14 @@ export async function getUserById(id) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   });
-  if (!response.ok) {
-    throw new Error("Failed to fetch user");
-  }
-  return response.json();
+  const body = await response.json(); // read once
+
+  if (!response.ok)
+    throw new Error(
+      `${response.status} - ${body.response.body.responseInfo.message}`,
+    );
+  return body;
 }
