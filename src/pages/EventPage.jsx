@@ -23,6 +23,9 @@ function EventPage() {
     year: "numeric",
   });
 
+  const isPastEvent = new Date(event.eventDate) < new Date();
+  const openToBook = event.status === "OPEN" && !isPastEvent;
+
   // ✅ Delete handler (you can connect to backend API here)
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this event?")) {
@@ -57,14 +60,22 @@ function EventPage() {
 
               <div className="header-actions">
                 {token && role !== "ADMIN" && (
-                  <button
-                    className="inline-book-btn"
-                    onClick={() =>
-                      navigate(`/booking/${event.id}`, { state: event })
-                    }
-                  >
-                    Book This Event
-                  </button>
+                  <>
+                    {openToBook ? (
+                      <button
+                        className="inline-book-btn"
+                        onClick={() =>
+                          navigate(`/booking/${event.id}`, { state: event })
+                        }
+                      >
+                        Book This Event
+                      </button>
+                    ) : (
+                      <button className="inline-book-btn disabled" disabled>
+                        {isPastEvent ? "Event Closed" : "Booking Not Open"}
+                      </button>
+                    )}
+                  </>
                 )}
 
                 {token && role === "ADMIN" && (

@@ -48,15 +48,12 @@ const AdminBookingPage = () => {
   if (loading) return <p>Loading bookings...</p>;
   if (error) {
     return (
-      <div className="error-message">
-        {error || "We couldn’t load the bookings. Please try again."}
-        <button
-          className="error-retry-btn"
-          onClick={() => window.location.reload()}
-        >
-          Retry
-        </button>
-      </div>
+      <>
+        <div className="empty-card">
+          <span className="empty-icon">🎉</span>
+          {error || "We couldn’t load the bookings. Please try again later."}
+        </div>
+      </>
     );
   }
 
@@ -82,7 +79,7 @@ const AdminBookingPage = () => {
               <td>{booking.event || booking.eventId}</td>
               <td>{booking.numberOfSeats}</td>
               <td>{new Date(booking.bookingDate).toLocaleString()}</td>
-              <td>{booking.totalPrice}</td>
+              <td>{`RM ${booking.totalPrice}`}</td>
               <td className={`status ${booking.bookingStatus.toLowerCase()}`}>
                 {booking.bookingStatus}
               </td>
