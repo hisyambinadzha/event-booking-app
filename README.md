@@ -1,16 +1,89 @@
-# React + Vite
+# Event Booking Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple event booking application built using React and Vite. The application allows users to browse and book events. 
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Browse and search for events by category
+- View event details, including date, time, location, and description
+- Book events and view booking details
+- Edit and delete events (for authenticated users for admin role only)
+- Authentication and authorization using JWT tokens
 
-## React Compiler
+## Installation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Clone the repository: `git clone https://github.com/hisyambinadzha/event-booking-app.git`
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run dev`
+4. Open your browser and navigate to `http://localhost:5173`
 
-## Expanding the ESLint configuration
+## Usage
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Authentication
+
+The application uses JWT tokens for authentication. To authenticate, users can register or login using the `/auth` endpoint. 
+
+#### Register
+
+To register a new user, send a `POST` request to `/auth/register` with the following JSON payload:
+
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+#### Login
+
+To login, send a `POST` request to `/auth/login` with the following JSON payload:
+
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+The application will respond with a JWT token that should be stored in local storage and sent with subsequent requests.
+
+### Events
+
+#### Browse Events
+
+To browse events, navigate to the homepage. The application will display a list of events, sorted by date. Users can filter events by category using the dropdown menu.
+
+#### View Event Details
+
+To view event details, click on an event card. The application will display the event's date, time, location, description, and other details.
+
+#### Book an Event
+
+To book an event, click on the "Book" button on the event details page. The application will prompt the user to enter their name and email address. Once the booking is submitted, the application will display a confirmation message.
+
+#### Edit an Event
+
+To edit an event, click on the "Edit" button on the event details page. The application will display a form to edit the event's details. Once the form is submitted, the application will update the event details.
+
+#### Delete an Event
+
+To delete an event, click on the "Delete" button on the event details page. The application will prompt the user to confirm the deletion. Once the deletion is confirmed, the application will remove the event from the database.
+
+## Technologies Used
+
+- React
+- Vite
+- Node.js
+- Express
+- MongoDB
+- JWT
+- bcrypt
+
+## Contributing
+
+Contributions are welcome! Please open an issue or pull request if you have any suggestions or bug fixes.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
